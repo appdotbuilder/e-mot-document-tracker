@@ -1,9 +1,22 @@
+import { db } from '../db';
+import { incomingMailsTable } from '../db/schema';
+import { eq } from 'drizzle-orm';
 import { type IncomingMail } from '../schema';
 
 export const getMailById = async (id: number): Promise<IncomingMail | null> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is to fetch a single incoming mail record by ID.
-    // Used for editing functionality to get current mail data.
-    // Returns null if mail not found.
-    return Promise.resolve(null);
+  try {
+    const results = await db.select()
+      .from(incomingMailsTable)
+      .where(eq(incomingMailsTable.id, id))
+      .execute();
+
+    if (results.length === 0) {
+      return null;
+    }
+
+    return results[0];
+  } catch (error) {
+    console.error('Get mail by ID failed:', error);
+    throw error;
+  }
 };

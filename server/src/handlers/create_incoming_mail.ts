@@ -1,12 +1,12 @@
+import { db } from '../db';
+import { incomingMailsTable } from '../db/schema';
 import { type CreateIncomingMailInput, type IncomingMail } from '../schema';
 
 export const createIncomingMail = async (input: CreateIncomingMailInput): Promise<IncomingMail> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is to create a new incoming mail record in the database.
-    // Should validate that registration_number is unique.
-    // Should set created_at and updated_at timestamps automatically.
-    return Promise.resolve({
-        id: 0, // Placeholder ID
+  try {
+    // Insert incoming mail record
+    const result = await db.insert(incomingMailsTable)
+      .values({
         registration_number: input.registration_number,
         sender_name: input.sender_name,
         opd_name: input.opd_name,
@@ -17,8 +17,14 @@ export const createIncomingMail = async (input: CreateIncomingMailInput): Promis
         status: input.status,
         department: input.department,
         update_date: input.update_date || null,
-        notes: input.notes || null,
-        created_at: new Date(),
-        updated_at: new Date()
-    } as IncomingMail);
+        notes: input.notes || null
+      })
+      .returning()
+      .execute();
+
+    return result[0];
+  } catch (error) {
+    console.error('Incoming mail creation failed:', error);
+    throw error;
+  }
 };

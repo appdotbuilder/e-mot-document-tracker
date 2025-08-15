@@ -1,8 +1,18 @@
+import { db } from '../db';
+import { incomingMailsTable } from '../db/schema';
 import { type IncomingMail } from '../schema';
+import { desc } from 'drizzle-orm';
 
 export const getAllMails = async (): Promise<IncomingMail[]> => {
-    // This is a placeholder declaration! Real code should be implemented here.
-    // The goal of this handler is to fetch all incoming mail records for admin management.
-    // Should return all mails ordered by created_at in descending order.
-    return Promise.resolve([]);
+  try {
+    const results = await db.select()
+      .from(incomingMailsTable)
+      .orderBy(desc(incomingMailsTable.created_at))
+      .execute();
+
+    return results;
+  } catch (error) {
+    console.error('Failed to fetch all mails:', error);
+    throw error;
+  }
 };
