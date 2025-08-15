@@ -17,14 +17,14 @@ export const changePassword = async (adminId: number, input: ChangePasswordInput
 
     const admin = adminResult[0];
 
-    // Verify current password using Bun.password
+    // Verify current password
     const isCurrentPasswordValid = await Bun.password.verify(input.current_password, admin.password_hash);
     
     if (!isCurrentPasswordValid) {
       return false; // Current password is incorrect
     }
 
-    // Hash the new password using Bun.password
+    // Hash the new password
     const newPasswordHash = await Bun.password.hash(input.new_password);
 
     // Update the password in the database

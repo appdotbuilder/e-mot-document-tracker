@@ -28,7 +28,7 @@ import { createIncomingMail } from './handlers/create_incoming_mail';
 import { updateIncomingMail } from './handlers/update_incoming_mail';
 import { deleteMail } from './handlers/delete_mail';
 import { getMailById } from './handlers/get_mail_by_id';
-import { createDefaultAdmin } from './handlers/create_default_admin';
+import { seedAdminUser } from './handlers/seed_admin_user';
 
 const t = initTRPC.create({
   transformer: superjson,
@@ -100,26 +100,21 @@ const appRouter = router({
 export type AppRouter = typeof appRouter;
 
 async function start() {
-  try {
-    // Initialize default admin user if none exists
-    await createDefaultAdmin();
-    
-    const port = process.env['SERVER_PORT'] || 2022;
-    const server = createHTTPServer({
-      middleware: (req, res, next) => {
-        cors()(req, res, next);
-      },
-      router: appRouter,
-      createContext() {
-        return {};
-      },
-    });
-    server.listen(port);
-    console.log(`E-MOT TRPC server listening at port: ${port}`);
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
+  // Seed default admin user if none exists
+  await seedAdminUser();
+  
+  const port = process.env['SERVER_PORT'] || 2022;
+  const server = createHTTPServer({
+    middleware: (req, res, next) => {
+      cors()(req, res, next);
+    },
+    router: appRouter,
+    createContext() {
+      return {};
+    },
+  });
+  server.listen(port);
+  console.log(`E-MOT TRPC server listening at port: ${port}`);
 }
 
 start();
