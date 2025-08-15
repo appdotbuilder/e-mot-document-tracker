@@ -9,6 +9,7 @@ import { z } from 'zod';
 import {
   trackDocumentInputSchema,
   adminLoginInputSchema,
+  registerAdminInputSchema,
   changePasswordInputSchema,
   searchMailsInputSchema,
   createIncomingMailInputSchema,
@@ -19,6 +20,7 @@ import {
 // Import all handlers
 import { trackDocument } from './handlers/track_document';
 import { adminLogin } from './handlers/admin_login';
+import { registerAdmin } from './handlers/register_admin';
 import { changePassword } from './handlers/change_password';
 import { getDashboardStats } from './handlers/get_dashboard_stats';
 import { getRecentMails } from './handlers/get_recent_mails';
@@ -52,6 +54,10 @@ const appRouter = router({
   adminLogin: publicProcedure
     .input(adminLoginInputSchema)
     .mutation(({ input }) => adminLogin(input)),
+
+  registerAdmin: publicProcedure
+    .input(registerAdminInputSchema)
+    .mutation(({ input }) => registerAdmin(input)),
 
   // Admin password management
   changePassword: publicProcedure

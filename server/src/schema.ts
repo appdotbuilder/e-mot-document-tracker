@@ -96,6 +96,14 @@ export const adminLoginInputSchema = z.object({
 
 export type AdminLoginInput = z.infer<typeof adminLoginInputSchema>;
 
+// Admin registration schema
+export const registerAdminInputSchema = z.object({
+  username: z.string().min(1),
+  password: z.string().min(6)
+});
+
+export type RegisterAdminInput = z.infer<typeof registerAdminInputSchema>;
+
 // Change password schema
 export const changePasswordInputSchema = z.object({
   current_password: z.string().min(1),
